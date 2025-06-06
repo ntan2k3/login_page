@@ -28,6 +28,7 @@ function Signin() {
               name="password"
               className="form-input"
               placeholder="Enter your password"
+              minLength={8}
               required
             />
             <p className="form-message"></p>
