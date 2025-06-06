@@ -43,10 +43,10 @@ html {
 }
 
 .form-label {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   line-height: 1.8rem;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.05rem;
 }
 
 .form-input {
@@ -65,7 +65,7 @@ html {
 }
 
 .form-message {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.6rem;
   padding: 4px 0 0;
   color: red;
@@ -80,11 +80,27 @@ html {
   border-radius: 0.8rem;
   cursor: pointer;
   background-color: aqua;
+  box-shadow: 2px 2px 10px rgba(16, 16, 17, 0.1);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .form-button:hover {
   background-color: #31d6ec;
+}
+
+.form-signup {
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 1.6rem 0;
+  color: black;
+}
+
+.form-signup a {
+  color: black;
+}
+
+.form-signup a:hover {
+  color: #31d6ec;
 }
 
 .invalid {
