@@ -72,21 +72,23 @@ function Validator(obj) {
 // Nguyên tắc các rule
 // 1. Nếu có lỗi thì trả về message lỗi
 // 2. Nếu không có lỗi thì trả về undefined
-Validator.isRequired = function (selector) {
+Validator.isRequired = function (selector, message) {
   return {
     selector: selector,
     testFn: function (value) {
-      return value.trim() ? undefined : "Vui lòng nhập trường này";
+      return value.trim() ? undefined : message || "Vui lòng nhập trường này";
     },
   };
 };
 
-Validator.isEmail = function (selector) {
+Validator.isEmail = function (selector, message) {
   return {
     selector: selector,
     testFn: function (value) {
       const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-      return regex.test(value) ? undefined : "Vui lòng nhập email hợp lệ";
+      return regex.test(value)
+        ? undefined
+        : message || "Vui lòng nhập email hợp lệ";
     },
   };
 };

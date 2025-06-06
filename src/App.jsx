@@ -9,8 +9,8 @@ function App() {
       formMessage: ".form-message",
       formButton: "#form-button",
       rules: [
-        Validator.isRequired("#username"),
-        Validator.isRequired("#password"),
+        Validator.isRequired("#username", "Please enter your username"),
+        Validator.isRequired("#password", "Please enter your password"),
       ],
     });
   }, []);
