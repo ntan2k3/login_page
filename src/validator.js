@@ -36,27 +36,26 @@ function Validator(obj) {
   //----------------------------------------------
 
   // Lấy phần tử form theo ID, ở đây là form có id là "form-1"
-  const formELement = document.querySelector(obj.formId);
+  const formElement = document.querySelector(obj.formId);
 
-  if (formELement) {
+  if (formElement) {
     // Khi submit form
-    const buttonElement = formELement.querySelector(obj.formButton);
+    const buttonElement = formElement.querySelector(obj.formButton);
 
     // Lắng nghe sự kiện click vào nút submit
     buttonElement.addEventListener("click", function (e) {
       e.preventDefault();
 
       obj.rules.forEach((rule) => {
-        const inputElement = formELement.querySelector(rule.selector);
-        if (inputElement) {
-          validate(inputElement, rule); // Gọi hàm validate để kiểm tra từng trường
-        }
+        const inputElement = formElement.querySelector(rule.selector);
+
+        validate(inputElement, rule); // Gọi hàm validate để kiểm tra từng trường
       });
     });
     // Nếu tồn tại form thì thực hiện các bước kiểm tra
 
     obj.rules.forEach((rule) => {
-      const inputElement = formELement.querySelector(rule.selector);
+      const inputElement = formElement.querySelector(rule.selector);
 
       if (inputElement) {
         inputElement.addEventListener("blur", function () {
