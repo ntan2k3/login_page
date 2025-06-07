@@ -11,9 +11,10 @@ function App() {
       formButton: "#form-button",
       rules: [
         Validator.isRequired("#username", "Please enter your username"),
-        Validator.isRequired(
+        Validator.isRequired("#password", "Please enter your password"),
+        Validator.isPassWord(
           "#password",
-          "Must be 8 or more characters and contain at least one number and one special character"
+          "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
         ),
       ],
     });

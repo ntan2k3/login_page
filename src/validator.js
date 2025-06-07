@@ -1,6 +1,6 @@
 // Tạo ra một hàm Validator để kiểm tra các trường trong form
 
-/**
+/** Mong muốn:
  * Validator({
       formId: "#form-1",
       formMessage: ".form-message",
@@ -14,12 +14,32 @@
  */
 
 function Validator(obj) {
+  // Tạo ra một mảng selectorRules để lưu trữ các rules cho từng trường input.
+  const selectorRules = {};
+  obj.rules.forEach((rule) => {
+    if (Array.isArray(selectorRules[rule.selector])) {
+      selectorRules[rule.selector].push(rule.testFn);
+    } else {
+      selectorRules[rule.selector] = [rule.testFn];
+    }
+  });
+  // selectorRules = {
+  // "#password":
+  // "#email"
+  //}
+
   // Tạo hàm validate()
   function validate(inputElement, rule) {
-    const errorMessage = rule.testFn(inputElement.value);
+    let errorMessage;
     const messageElement = inputElement.parentElement.querySelector(
       obj.formMessage
     );
+    const rules = selectorRules[rule.selector];
+
+    for (const fn of rules) {
+      errorMessage = fn(inputElement.value);
+      if (errorMessage) break;
+    }
 
     if (errorMessage) {
       // Nếu có lỗi thì hiển thị thông báo lỗi
@@ -39,7 +59,7 @@ function Validator(obj) {
   const formElement = document.querySelector(obj.formId);
 
   if (formElement) {
-    // Khi submit form
+    // 1. Khi các trường input để trống và người dùng click vào nút submit thì sẽ hiển thị thông báo lỗi (done)
     const buttonElement = formElement.querySelector(obj.formButton);
 
     // Lắng nghe sự kiện click vào nút submit
@@ -52,8 +72,8 @@ function Validator(obj) {
         validate(inputElement, rule); // Gọi hàm validate để kiểm tra từng trường
       });
     });
-    // Nếu tồn tại form thì thực hiện các bước kiểm tra
 
+    // 2. Khi người dùng nhập dữ liệu vào các trường input thì sẽ kiểm tra ngay (done)
     obj.rules.forEach((rule) => {
       const inputElement = formElement.querySelector(rule.selector);
 
@@ -67,10 +87,9 @@ function Validator(obj) {
   }
 }
 
-// Định nghĩa các rules kiểm tra
-// Nguyên tắc các rule
-// 1. Nếu có lỗi thì trả về message lỗi
-// 2. Nếu không có lỗi thì trả về undefined
+// 3. Tạo các rules để kiểm tra từng trường input
+
+// isRequired: Kiểm tra trường input có được nhập hay không
 Validator.isRequired = function (selector, message) {
   return {
     selector: selector,
@@ -80,6 +99,7 @@ Validator.isRequired = function (selector, message) {
   };
 };
 
+// isEmail: Kiểm tra trường input có phải là email hợp lệ hay không
 Validator.isEmail = function (selector, message) {
   return {
     selector: selector,
@@ -88,6 +108,20 @@ Validator.isEmail = function (selector, message) {
       return regex.test(value)
         ? undefined
         : message || "Vui lòng nhập email hợp lệ";
+    },
+  };
+};
+
+// isPassWord: Kiểm tra trường input có phải là mật khẩu hợp lệ hay không
+Validator.isPassWord = function (selector, message) {
+  return {
+    selector: selector,
+    testFn: function (value) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      return regex.test(value)
+        ? undefined
+        : message ||
+            "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số";
     },
   };
 };
