@@ -38,7 +38,7 @@ html {
   margin: 1rem 0;
 }
 
-.form-container:last-of-type {
+.form-container:has(input[type="checkbox"]) {
   flex-direction: row;
 }
 

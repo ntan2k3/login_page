@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import Validator from "../validator";
 
-function Login() {
+function Signup() {
   useEffect(() => {
     // Chờ DOM được tải xong trước khi khởi tạo Validator
     Validator({
@@ -16,6 +16,8 @@ function Login() {
           "#password",
           "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
         ),
+        Validator.isRequired("#email", "Please enter your email"),
+        Validator.isEmail("#email", "Please enter a valid email"),
       ],
     });
   }, []);
@@ -23,7 +25,7 @@ function Login() {
     <>
       <div className="main">
         <form action="" className="form" id="form-1" method="POST">
-          <h1 className="form-title">Login</h1>
+          <h1 className="form-title">Sign up</h1>
           <div className="form-container">
             <label htmlFor="username" className="form-label">
               Username
@@ -34,6 +36,20 @@ function Login() {
               name="username"
               className="form-input"
               placeholder="Enter your username"
+              required
+            />
+            <p className="form-message"></p>
+          </div>
+          <div className="form-container">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="form-input"
+              placeholder="Enter your email"
               required
             />
             <p className="form-message"></p>
@@ -53,22 +69,12 @@ function Login() {
             />
             <p className="form-message"></p>
           </div>
-          <div className="form-container">
-            <input
-              type="checkbox"
-              id="remember"
-              name="remember"
-              className="form-checkbox"
-            />
-            <label htmlFor="remember" className="form-label">
-              Remember me
-            </label>
-          </div>
+
           <button id="form-button" className="form-button" type="submit">
             Login
           </button>
           <p className="form-signup">
-            Need an account? <Link to="/signup">Sign up</Link>
+            Already have an account? <Link to="/">Login</Link>
           </p>
         </form>
       </div>
@@ -76,4 +82,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;
