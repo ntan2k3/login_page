@@ -20,12 +20,15 @@ function Signup() {
         Validator.isRequired("#email", "Please enter your email"),
         Validator.isEmail("#email", "Please enter a valid email"),
       ],
+      onSubmit: function (data) {
+        console.log(data);
+      },
     });
   }, []);
   return (
     <>
       <div className="main">
-        <form action="" className="form" id="form-1" method="POST">
+        <form action="" className="form" id="form-1" method="post">
           <h1 className="form-title">Sign up</h1>
           <div className="form-container">
             <label htmlFor="username" className="form-label">
@@ -37,7 +40,6 @@ function Signup() {
               name="username"
               className="form-input"
               placeholder="Enter your username"
-              required
             />
             <p className="form-message"></p>
           </div>
@@ -51,7 +53,6 @@ function Signup() {
               name="email"
               className="form-input"
               placeholder="Enter your email"
-              required
             />
             <p className="form-message"></p>
           </div>

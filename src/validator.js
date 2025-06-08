@@ -1,46 +1,24 @@
-// Tạo ra một hàm Validator để kiểm tra các trường trong form
-
-/** Mong muốn:
- * Validator({
-      formId: "#form-1",
-      formMessage: ".form-message",
-      rules: [
-        Validator.isRequired("#username"),
-        Validator.isRequired("#password"),
-      ],
-    });
-
-    Các validator.isRequired sẽ trả về một object chứa selector và hàm test.
- */
-
 function Validator(obj) {
   // Tạo ra một mảng selectorRules để lưu trữ các rules cho từng trường input.
   const selectorRules = {};
-  obj.rules.forEach((rule) => {
-    if (Array.isArray(selectorRules[rule.selector])) {
-      selectorRules[rule.selector].push(rule.testFn);
-    } else {
-      selectorRules[rule.selector] = [rule.testFn];
-    }
-  });
+
   // Tạo hàm lấy thẻ chứa class là form-container (ví dụ thẻ input được lồng trong nhiều thẻ div khác thì không thể sử dụng parentElement trực tiếp)
-  function getFormContainer(e, selector) {
-    while (e.parentElement) {
-      if (e.parentElement.matches(selector)) {
-        return e.parentElement;
-      } else {
-        e = e.parentElement;
+  function getFormGroupElement(element, selector) {
+    while (element.parentElement) {
+      if (element.parentElement.matches(selector)) {
+        return element.parentElement;
       }
+      element = element.parentElement;
     }
   }
-  // Tạo hàm validate()
+
+  // Tạo hàm validate() để kiểm tra các thẻ input
   function validate(inputElement, rule) {
     let errorMessage;
-    const formContainerELement = getFormContainer(inputElement, obj.formGroup);
-    const messageElement = formContainerELement.querySelector(obj.formMessage);
+    const formGroupElement = getFormGroupElement(inputElement, obj.formGroup);
+    const messageElement = formGroupElement.querySelector(obj.formMessage);
     const rules = selectorRules[rule.selector];
 
-    // Kiểm tra sự tồn tại của messageELement
     if (messageElement) {
       for (const fn of rules) {
         errorMessage = fn(inputElement.value);
@@ -58,47 +36,68 @@ function Validator(obj) {
         inputElement.classList.remove("invalid");
       }
     }
+    return !errorMessage; // true nếu có lỗi
   }
   //----------------------------------------------
 
-  // Lấy phần tử form theo ID, ở đây là form có id là "form-1"
+  // Lấy phần tử form
   const formElement = document.querySelector(obj.formId);
 
   if (formElement) {
-    // 1. Khi các trường input để trống và người dùng click vào nút submit thì sẽ hiển thị thông báo lỗi (done)
-    const buttonElement = formElement.querySelector(obj.formButton);
-
-    // Lắng nghe sự kiện click vào nút submit
-    buttonElement.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      obj.rules.forEach((rule) => {
-        const inputElement = formElement.querySelector(rule.selector);
-
-        validate(inputElement, rule); // Gọi hàm validate để kiểm tra từng trường
-      });
-    });
-
-    // 2. Check các sự kiện blur và input (done)
+    // Thêm các rule vào mảng
     obj.rules.forEach((rule) => {
+      if (Array.isArray(selectorRules[rule.selector])) {
+        selectorRules[rule.selector].push(rule.testFn);
+      } else {
+        selectorRules[rule.selector] = [rule.testFn];
+      }
+
+      // 1. Check các sự kiện blur và input (done)
+
       const inputElement = formElement.querySelector(rule.selector);
 
       if (inputElement) {
-        inputElement.addEventListener("blur", function () {
-          // Khi trường mất focus thì kiểm tra
-          validate(inputElement, rule);
-        });
-        inputElement.addEventListener("input", function () {
-          // Khi nhập vào thì mất hiện thị báo lỗi
-          validate(inputElement, rule);
-        });
+        inputElement.addEventListener("blur", () =>
+          validate(inputElement, rule)
+        );
+        inputElement.addEventListener("input", () =>
+          validate(inputElement, rule)
+        );
+      }
+    });
+    // 2. Khi các trường input để trống và người dùng submit form thì báo lỗi ở từng input
+    // Lắng nghe sự kiện khi submit form
+    formElement.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      let isFormValid = true;
+
+      obj.rules.forEach((rule) => {
+        const inputElement = formElement.querySelector(rule.selector);
+        let isValid = validate(inputElement, rule);
+        if (!isValid) {
+          isFormValid = false;
+        }
+      });
+
+      const enabledInputs = formElement.querySelectorAll(
+        "[name]:not([disabled])"
+      );
+      const formValues = Array.from(enabledInputs).reduce((values, input) => {
+        values[input.name] = input.value;
+        return values;
+      }, {});
+
+      if (isFormValid && typeof obj.onSubmit === "function") {
+        obj.onSubmit(formValues);
+      } else {
+        console.log("Hello");
       }
     });
   }
 }
 
 // 3. Tạo các rules để kiểm tra từng trường input
-
 // isRequired: Kiểm tra trường input có được nhập hay không
 Validator.isRequired = function (selector, message) {
   return {

@@ -18,12 +18,15 @@ function Login() {
           "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
         ),
       ],
+      onSubmit: function (data) {
+        console.log(data);
+      },
     });
   }, []);
   return (
     <>
       <div className="main">
-        <form action="" className="form" id="form-1" method="POST">
+        <form action="" className="form" id="form-1" method="post">
           <h1 className="form-title">Login</h1>
           <div className="form-container">
             <label htmlFor="username" className="form-label">
@@ -35,7 +38,6 @@ function Login() {
               name="username"
               className="form-input"
               placeholder="Enter your username"
-              required
             />
             <p className="form-message"></p>
           </div>
@@ -50,7 +52,6 @@ function Login() {
               className="form-input"
               placeholder="Enter your password"
               minLength={8}
-              required
             />
             <p className="form-message"></p>
           </div>
