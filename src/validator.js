@@ -23,34 +23,40 @@ function Validator(obj) {
       selectorRules[rule.selector] = [rule.testFn];
     }
   });
-  // selectorRules = {
-  // "#password":
-  // "#email"
-  //}
-
+  // Tạo hàm lấy thẻ chứa class là form-container (ví dụ thẻ input được lồng trong nhiều thẻ div khác thì không thể sử dụng parentElement trực tiếp)
+  function getFormContainer(e, selector) {
+    while (e.parentElement) {
+      if (e.parentElement.matches(selector)) {
+        return e.parentElement;
+      } else {
+        e = e.parentElement;
+      }
+    }
+  }
   // Tạo hàm validate()
   function validate(inputElement, rule) {
     let errorMessage;
-    const messageElement = inputElement.parentElement.querySelector(
-      obj.formMessage
-    );
+    const formContainerELement = getFormContainer(inputElement, obj.formGroup);
+    const messageElement = formContainerELement.querySelector(obj.formMessage);
     const rules = selectorRules[rule.selector];
 
-    for (const fn of rules) {
-      errorMessage = fn(inputElement.value);
-      if (errorMessage) break;
-    }
+    // Kiểm tra sự tồn tại của messageELement
+    if (messageElement) {
+      for (const fn of rules) {
+        errorMessage = fn(inputElement.value);
+        if (errorMessage) break;
+      }
+      if (errorMessage) {
+        // Nếu có lỗi thì hiển thị thông báo lỗi
 
-    if (errorMessage) {
-      // Nếu có lỗi thì hiển thị thông báo lỗi
+        messageElement.innerText = errorMessage;
+        inputElement.classList.add("invalid");
+      } else {
+        // Nếu không có lỗi thì xóa thông báo lỗi
 
-      messageElement.innerText = errorMessage;
-      inputElement.classList.add("invalid");
-    } else {
-      // Nếu không có lỗi thì xóa thông báo lỗi
-
-      messageElement.innerText = "";
-      inputElement.classList.remove("invalid");
+        messageElement.innerText = "";
+        inputElement.classList.remove("invalid");
+      }
     }
   }
   //----------------------------------------------
@@ -73,13 +79,17 @@ function Validator(obj) {
       });
     });
 
-    // 2. Khi người dùng nhập dữ liệu vào các trường input thì sẽ kiểm tra ngay (done)
+    // 2. Check các sự kiện blur và input (done)
     obj.rules.forEach((rule) => {
       const inputElement = formElement.querySelector(rule.selector);
 
       if (inputElement) {
         inputElement.addEventListener("blur", function () {
           // Khi trường mất focus thì kiểm tra
+          validate(inputElement, rule);
+        });
+        inputElement.addEventListener("input", function () {
+          // Khi nhập vào thì mất hiện thị báo lỗi
           validate(inputElement, rule);
         });
       }
