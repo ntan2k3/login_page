@@ -9,6 +9,7 @@ function Login() {
       formId: "#form-1",
       formMessage: ".form-message",
       formButton: "#form-button",
+      formGroup: ".form-container",
       rules: [
         Validator.isRequired("#username", "Please enter your username"),
         Validator.isRequired("#password", "Please enter your password"),
