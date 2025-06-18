@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { Button, Form, Input } from "antd";
-import Validator from "../validator";
-import "./formStyle.css";
+import Container from "../components/Container";
+import Validator from "../utils/validator";
+import "../styles/formStyle.css";
 
 function Login() {
   useEffect(() => {
@@ -30,33 +30,19 @@ function Login() {
       <form id="form-1" className="form" autoComplete="off">
         <h1 className="form_title">Login</h1>
 
-        <div className="form_container">
-          <label htmlFor="username" className="form_label">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            className="form_input"
-            placeholder="Enter your username"
-          />
-          <p className="form_message"></p>
-        </div>
+        <Container
+          name="username"
+          label="Username"
+          type="text"
+          placeholder="Enter your username"
+        ></Container>
 
-        <div className="form_container">
-          <label htmlFor="password" className="form_label">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="form_input"
-            placeholder="Enter your password"
-          />
-          <p className="form_message"></p>
-        </div>
+        <Container
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+        ></Container>
 
         <div className="form_container form_checkbox_group">
           <label htmlFor="remember" className="form_label">
