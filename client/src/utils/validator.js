@@ -1,11 +1,13 @@
 function Validator(obj) {
-  // Tạo ra một mảng selectorRules để lưu trữ các rules cho từng trường input.
+  // Tạo ra một obj selectorRules để lưu trữ các rules (array) cho từng trường input.
   const selectorRules = {};
 
   // Tạo hàm lấy thẻ chứa class là form-container (ví dụ thẻ input được lồng trong nhiều thẻ div khác thì không thể sử dụng parentElement trực tiếp)
   function getFormGroupElement(element, selector) {
     while (element.parentElement) {
       if (element.parentElement.matches(selector)) {
+        // matches() return true nếu tìm thấy CSS selector = selector.
+        // Nếu đúng trả về element.parentElement
         return element.parentElement;
       }
       element = element.parentElement;
@@ -15,8 +17,8 @@ function Validator(obj) {
   // Tạo hàm validate() để kiểm tra các thẻ input
   function validate(inputElement, rule) {
     let errorMessage;
-    const formGroupElement = getFormGroupElement(inputElement, obj.formGroup);
-    const messageElement = formGroupElement.querySelector(obj.formMessage);
+    const formGroupElement = getFormGroupElement(inputElement, obj.formGroup); // Lấy được form-container
+    const messageElement = formGroupElement.querySelector(obj.formMessage); // Lấy được form-message
     const rules = selectorRules[rule.selector];
 
     if (messageElement) {
@@ -65,7 +67,7 @@ function Validator(obj) {
         );
       }
     });
-    // 2. Khi các trường input để trống và người dùng submit form thì báo lỗi ở từng input
+    // 2. Khi các trường input để trống và người dùng submit form thì báo lỗi ở tất cả input
     // Lắng nghe sự kiện khi submit form
     formElement.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -91,7 +93,7 @@ function Validator(obj) {
       if (isFormValid && typeof obj.onSubmit === "function") {
         obj.onSubmit(formValues);
       } else {
-        console.log("Hello");
+        console.error("Chưa nhập dữ liệu");
       }
     });
   }

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { Button, Form, Input } from "antd";
-import Validator from "../validator";
-import "./formStyle.css";
+import Container from "../components/Container";
+import Validator from "../utils/validator";
+import "../styles/formStyle.css";
 
 function Signup() {
   useEffect(() => {
@@ -32,49 +32,30 @@ function Signup() {
       <div className="main">
         <form id="form-1" className="form" autoComplete="off">
           <h1 className="form_title">Sign up</h1>
-          <div className="form_container">
-            <label htmlFor="username" className="form_label">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              className="form_input"
-              placeholder="Enter your username"
-            />
-            <p className="form_message"></p>
-          </div>
-          <div className="form_container">
-            <label htmlFor="email" className="form_label">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="form_input"
-              placeholder="Enter your email"
-            />
-            <p className="form_message"></p>
-          </div>
-          <div className="form_container">
-            <label htmlFor="password" className="form_label">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="form_input"
-              placeholder="Enter your password"
-              minLength={8}
-            />
-            <p className="form_message"></p>
-          </div>
+
+          <Container
+            name="username"
+            label="Username"
+            type="text"
+            placeholder="Enter your username"
+          ></Container>
+
+          <Container
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="Enter your email"
+          ></Container>
+
+          <Container
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="Enter your password"
+          ></Container>
 
           <button id="form_button" className="form_button" type="submit">
-            Login
+            Sign up
           </button>
           <p className="form_signup">
             Already have an account? <Link to="/">Login</Link>
